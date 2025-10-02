@@ -1,11 +1,13 @@
 {
   "domain": "luxtronik",
   "name": "Luxtronik",
-  "codeowners": ["@bouni"],
-  "dependencies": [],
-  "documentation": "https://www.home-assistant.io/integrations/luxtronik",
+  "version": "2025.10.01",
   "iot_class": "local_polling",
+  "documentation": "https://www.home-assistant.io/integrations/luxtronik",
   "issue_tracker": "https://github.com/Bouni/luxtronik/issues",
-  "requirements": ["luxtronik==0.3.14"],
-  "version": "2022.12.01"
+  "requirements": [
+    "luxtronik @ git+https://github.com/Bouni/python-luxtronik@main"
+  ],
+  "dependencies": [],
+  "codeowners": ["@bouni"]
 }
