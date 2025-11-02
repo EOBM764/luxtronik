@@ -124,12 +124,14 @@ class LuxtronikSensor(SensorEntity):
     @property
     def device_class(self):
         """Return the class of this sensor."""
-        return DEVICE_CLASSES.get(self._sensor.measurement_type, DEFAULT_DEVICE_CLASS)
+        mt = getattr(self._sensor, "measurement_type", None)
+        return DEVICE_CLASSES.get(mt, DEFAULT_DEVICE_CLASS)
 
     @property
     def unit_of_measurement(self):
         """Return the unit of measurement of this entity, if any."""
-        return UNITS.get(self._sensor.measurement_type)
+        mt = getattr(self._sensor, "measurement_type", None)
+        return UNITS.get(mt)
 
     def update(self):
         """Get the latest status and use it to update our sensor state."""
