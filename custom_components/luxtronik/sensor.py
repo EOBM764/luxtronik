@@ -57,29 +57,35 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         return False
 
     sensors = config.get(CONF_SENSORS)
-
     entities = []
+
     for sensor_cfg in sensors:
         sensor = luxtronik.get_sensor(sensor_cfg[CONF_GROUP], sensor_cfg[CONF_ID])
-        if sensor:
-            entities.append(
-                LuxtronikSensor(
-                    luxtronik,
-                    sensor,
-                    sensor_cfg.get(CONF_FRIENDLY_NAME),
-                    sensor_cfg.get(CONF_ICON),
-                    sensor_cfg.get(CONF_STATE_CLASS),
-                )
-            )
-        else:
+
+        # 🩹 Wenn kein Sensor gefunden wird, lege Dummy an
+        if sensor is None:
             _LOGGER.warning(
-                "Invalid Luxtronik ID %s in group %s",
+                "Luxtronik ID %s nicht bekannt – Sensor wird trotzdem angelegt.",
                 sensor_cfg[CONF_ID],
-                sensor_cfg[CONF_GROUP],
             )
+            from types import SimpleNamespace
+            sensor = SimpleNamespace(
+                name=sensor_cfg[CONF_ID],
+                measurement_type="celsius",
+                value=0.0
+            )
+
+        entities.append(
+            LuxtronikSensor(
+                luxtronik,
+                sensor,
+                sensor_cfg.get(CONF_FRIENDLY_NAME),
+                sensor_cfg.get(CONF_ICON),
+                sensor_cfg.get(CONF_STATE_CLASS),
+            )
+        )
 
     add_entities(entities, True)
-
 
 class LuxtronikSensor(SensorEntity):
     """Representation of a Luxtronik sensor."""
